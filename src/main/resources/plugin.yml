@@ -1,0 +1,15 @@
+# ========================================
+# Fast XP pickup by exstrasilly :3
+# ========================================
+# Contacts
+#  > Discord: @xxxxxxxxxnnie
+#  > Telegram: @xxxxxxxxxnnie
+#  > Fiverr: @exstramc
+# ========================================
+
+name: "FastXPPickup"
+version: "1.0.0"
+description: "A utility plugin to remove XP orb pickup delays, hopefully improving performance and player experience!"
+author: "exstrasilly (xnnie)"
+main: "net.exstrasilly.fastxppickup.FastXPPickupPlugin"
+api-version: "1.19"
