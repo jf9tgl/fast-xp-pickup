@@ -22,6 +22,7 @@ public class FastXPPickupPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         Bukkit.getPluginManager().registerEvents(this, this);
+        Bukkit.getPluginManager().addPermission(FASTXP_PERMISSION);
     }
 
     @EventHandler
