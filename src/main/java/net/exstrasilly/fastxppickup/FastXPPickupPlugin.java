@@ -5,29 +5,67 @@ import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerExpCooldownChangeEvent;
-import org.bukkit.permissions.Permission;
-import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class FastXPPickupPlugin extends JavaPlugin implements Listener {
 
-    public final Permission FASTXP_PERMISSION = new Permission(
-        "fastxppickup.pickup",
-        "This permission allows the holder to pick up XP orbs ignoring the delay. By default all players have it.",
-        PermissionDefault.TRUE
-    );
+    private FastXPPConfig pluginConfig;
+    private FastXPPCommand commandHandler;
 
     @Override
     public void onEnable() {
+        // Initialize configuration
+        pluginConfig = new FastXPPConfig(this);
+
+        // Initialize command handler
+        commandHandler = new FastXPPCommand(pluginConfig);
+
+        // Register events and commands
         Bukkit.getPluginManager().registerEvents(this, this);
-        Bukkit.getPluginManager().addPermission(FASTXP_PERMISSION);
+
+        if (getServer().getPluginManager().getPermission("fastxppickup.pickup") == null) {
+            getServer().getPluginManager().addPermission(new org.bukkit.permissions.Permission("fastxppickup.pickup", "Allows players to pick up XP orbs with configurable delay"));
+        }
+        if (getServer().getPluginManager().getPermission("fastxppickup.admin") == null) {
+            getServer().getPluginManager().addPermission(new org.bukkit.permissions.Permission("fastxppickup.admin", "Allows players to use the /fastxp command"));
+        }
+        if (getServer().getPluginManager().getPermission("fastxppickup.use") == null) {
+            getServer().getPluginManager().addPermission(new org.bukkit.permissions.Permission("fastxppickup.use", "Allows the player to use FastXPPickup command"));
+        }
+
+        // Register command executor and tab completer
+        getCommand("fastxpp").setExecutor(commandHandler);
+        getCommand("fastxpp").setTabCompleter(commandHandler);
+
+        getLogger().info("FastXPPickup plugin enabled with configurable delays!");
     }
 
     @EventHandler
     public void onExpCooldown(PlayerExpCooldownChangeEvent event) {
-        if (event.getPlayer().hasPermission(FASTXP_PERMISSION))
-            event.setNewCooldown(0);
+        Player player = event.getPlayer();
+        if (!player.hasPermission("fastxppickup.pickup")) {
+            return;
+        }
+
+        // Get nearby XP orbs to calculate delay based on their values
+        ExperienceOrb nearestOrb = player.getWorld().getNearbyEntities(
+                        player.getLocation(), 1.5, 1.5, 1.5
+                ).stream()
+                .filter(entity -> entity instanceof ExperienceOrb)
+                .map(entity -> (ExperienceOrb) entity)
+                .findFirst()
+                .orElse(null);
+
+        int delay;
+        if (nearestOrb != null) {
+            // Calculate delay based on the XP orb value
+            delay = pluginConfig.calculatePickupDelay(nearestOrb.getExperience());
+        } else {
+            // Use base delay if no orb is found
+            delay = pluginConfig.getBasePickupDelay();
+        }
+
+        event.setNewCooldown(delay);
     }
 }
