@@ -8,8 +8,25 @@
 # ========================================
 
 name: "FastXPPickup"
-version: "1.0.0"
+version: "1.1.0"
 description: "A utility plugin to remove XP orb pickup delays, hopefully improving performance and player experience!"
 author: "exstrasilly (xnnie)"
 main: "net.exstrasilly.fastxppickup.FastXPPickupPlugin"
 api-version: "1.19"
+
+commands:
+  fastxpp:
+    description: View configuration or reload the plugin
+    usage: /fastxpp [reload|config]
+    permission: fastxppickup.use
+
+permissions:
+  fastxppickup.pickup:
+    description: Allows players to pick up XP orbs with configurable delay
+    default: true
+  fastxppickup.use:
+    description: Allows players to use the /fastxp command
+    default: op
+  fastxppickup.admin:
+    description: Allows admins to reload the plugin configuration
+    default: op

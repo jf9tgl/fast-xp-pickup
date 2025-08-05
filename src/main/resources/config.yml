@@ -1,0 +1,19 @@
+# Fast XP Pickup Plugin Configuration
+
+# Base delay for XP pickup (in ticks, 20 ticks = 1 second)
+# Set to 0 to disable delay completely
+base-pickup-delay: 0
+
+# Enable value-based delay calculation
+# If true, delay will be calculated based on the XP orb value
+value-based-delay:
+  enabled: false
+  # Delay per XP point (in ticks)
+  delay-per-xp-point: 0.05
+  # Maximum delay cap (in ticks)
+  max-delay: 20
+  # Minimum delay (in ticks)
+  min-delay: 0
+
+# DO NOT CHANGE THIS NUMBER
+config-version: 1
