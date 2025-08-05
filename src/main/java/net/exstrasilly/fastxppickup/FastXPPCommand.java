@@ -22,6 +22,11 @@ public class FastXPPCommand implements CommandExecutor, TabCompleter {
             return false;
         }
 
+        // Ensure at least one argument is provided
+        if (args.length == 0) {
+            sender.sendMessage("§eUsage: /fastxp <reload|config>");
+            return true;
+        }
         // Handle reload subcommand
         if (args[0].equalsIgnoreCase("reload")) {
             handleReload(sender);
